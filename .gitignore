@@ -55,3 +55,8 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Banco SQLite local (gerado com dotnet ef database update)
+*.db
+*.db-shm
+*.db-wal
