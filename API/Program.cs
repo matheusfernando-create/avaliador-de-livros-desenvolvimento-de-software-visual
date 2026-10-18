@@ -7,4 +7,5 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 app.MapAvaliacaoEndpoints();
+app.MapUsuarioEndpoints();
 app.Run();
