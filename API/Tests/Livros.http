@@ -1,0 +1,30 @@
+@host = http://localhost:5195
+
+### CREATE - Cadastrar livro
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "anoPublicacao": 1899
+}
+
+### READ - Listar livros
+GET {{host}}/api/livro/listar
+
+### READ - Buscar livro por id
+GET {{host}}/api/livro/buscar/1
+
+### UPDATE - Alterar livro
+PUT {{host}}/api/livro/alterar/1
+Content-Type: application/json
+
+{
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "anoPublicacao": 1900
+}
+
+### DELETE - Remover livro
+DELETE {{host}}/api/livro/remover/1
