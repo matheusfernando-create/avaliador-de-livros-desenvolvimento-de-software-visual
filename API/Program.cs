@@ -8,4 +8,5 @@ var app = builder.Build();
 app.MapLivroEndpoints();
 app.MapAvaliacaoEndpoints();
 app.MapUsuarioEndpoints();
+app.MapEstanteEndpoints();
 app.Run();

@@ -1,0 +1,70 @@
+@host = http://localhost:5195
+
+# Antes: cadastre pelo menos 1 usuário (POST /usuarios) e 1 livro
+# (POST /api/livro/cadastrar), senão o POST abaixo retorna 400.
+
+### Cadastrar um usuário (para testar)
+POST {{host}}/usuarios
+Content-Type: application/json
+
+{
+    "nome": "Maria"
+}
+
+### Adicionar livro na estante (status: 0 = QueroLer, 1 = Lendo, 2 = Lido)
+POST {{host}}/estante
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 1,
+    "status": 0
+}
+
+### Adicionar o MESMO livro de novo -> deve dar 409 Conflict
+POST {{host}}/estante
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 1,
+    "status": 0
+}
+
+### Listar a estante do usuário 1
+GET {{host}}/usuarios/1/estante
+
+### Listar só os livros lidos (pelo nome ou pelo número do status)
+GET {{host}}/usuarios/1/estante/Lido
+
+### Listar os livros "Quero ler"
+GET {{host}}/usuarios/1/estante/0
+
+### Usuário inexistente -> deve dar 404
+GET {{host}}/usuarios/999/estante
+
+### Resumo da estante (quantos livros em cada status)
+GET {{host}}/usuarios/1/estante/resumo
+
+### Marcar como Lido
+PUT {{host}}/estante/1
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 1,
+    "status": 2
+}
+
+### Status inválido -> deve dar 400
+PUT {{host}}/estante/1
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 1,
+    "status": 99
+}
+
+### Remover da estante
+DELETE {{host}}/estante/1
