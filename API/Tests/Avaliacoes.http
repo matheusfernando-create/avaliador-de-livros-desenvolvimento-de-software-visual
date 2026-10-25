@@ -1,0 +1,92 @@
+@host = http://localhost:5195
+
+# Antes: cadastre pelo menos 1 usuário (POST /usuarios) e 1 livro
+# (POST /api/livro/cadastrar), senão o POST abaixo retorna 400.
+
+### Cadastrar um usuário (para testar)
+POST {{host}}/usuarios
+Content-Type: application/json
+
+{
+    "nome": "Maria"
+}
+
+### Cadastrar um livro (para testar)
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "anoPublicacao": 1899
+}
+
+### CREATE - Avaliar um livro (nota de 1 a 5)
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 1,
+    "nota": 5,
+    "comentario": "Capitu traiu ou não traiu? Leitura obrigatória."
+}
+
+### Avaliar o MESMO livro de novo -> deve dar 409 Conflict
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 1,
+    "nota": 4,
+    "comentario": "Segunda avaliação"
+}
+
+### Nota fora do intervalo -> deve dar 400
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 1,
+    "nota": 10,
+    "comentario": "Nota inválida"
+}
+
+### Livro inexistente -> deve dar 400
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 999,
+    "usuarioId": 1,
+    "nota": 3,
+    "comentario": "Livro que não existe"
+}
+
+### READ - Listar avaliações
+GET {{host}}/avaliacoes
+
+### READ - Buscar avaliação por id
+GET {{host}}/avaliacoes/1
+
+### Avaliações de um livro
+GET {{host}}/livros/1/avaliacoes
+
+### Média das notas de um livro
+GET {{host}}/livros/1/media
+
+### UPDATE - Alterar nota e comentário
+PUT {{host}}/avaliacoes/1
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 1,
+    "nota": 4,
+    "comentario": "Reli e mudei um pouco de opinião."
+}
+
+### DELETE - Remover avaliação
+DELETE {{host}}/avaliacoes/1

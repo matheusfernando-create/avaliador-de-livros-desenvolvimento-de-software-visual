@@ -1,9 +1,86 @@
 # Avaliador de Livros
 
-Projeto da matéria de **Desenvolvimento de Software Visual**.
+Projeto Final, Parte 1, da disciplina de **Desenvolvimento de Software Visual**.
 
-API REST em que usuários cadastram livros, dão notas e comentários e montam a sua
-**estante de leitura** (Quero ler / Lendo / Lido), no estilo Skoob ou Letterboxd.
+## Identificação
+
+- **Projeto:** Avaliador de Livros
+- **Turma:** 47_28708_Presencial_60
+- **Integrantes:**
+  - _Helder Dupont_
+    - **Curso:** _Ciência da Computação_
+  - _Matheus Fernando Costa Perrude da Silva_
+    - **Curso:** _Ciência da Computação_
+  - _Rodrigo Matsuda Valencia_
+    - **Curso:** _Engenharia da Computação_
+  - _Yasmin Cristini Lopes Oliveira_
+    - **Curso:** _Analise e desenvolvimento de sistemas_
+
+## Resumo
+
+O **Avaliador de Livros** é uma API REST desenvolvida em C# com .NET 8 (Minimal API), Entity
+Framework Core e SQLite, inspirada em plataformas como Skoob e Letterboxd. O sistema permite cadastrar
+usuários e livros e, a partir desses dados, registrar avaliações com nota de 1 a 5 e comentário,
+calcular a média de notas de cada livro e organizar uma estante de leitura pessoal em que cada livro
+recebe o status "Quero ler", "Lendo" ou "Lido". Avaliações e itens da estante só podem ser criados para
+usuários e livros já cadastrados. Regras no banco impedem que o mesmo usuário avalie um livro duas
+vezes ou o adicione duas vezes à estante. Assim, os cadastros básicos alimentam funcionalidades de
+acompanhamento de leitura e de opinião sobre os livros.
+
+## Funcionalidades
+
+- Cadastro, listagem, busca, alteração e remoção de **livros** (CRUD completo)
+- Cadastro, listagem, busca, alteração e remoção de **usuários** (CRUD completo)
+- **Avaliação de livros** com nota de 1 a 5 e comentário, limitada a uma por usuário para cada livro
+- **Média de notas** e lista de avaliações de cada livro
+- Histórico de **avaliações feitas por um usuário**
+- **Estante de leitura** com os status Quero ler, Lendo e Lido
+- **Filtro da estante por status** e **resumo** com a quantidade de livros em cada status
+- **Data de conclusão automática** quando um livro é marcado como Lido
+- **Validações de relacionamento**: só é possível avaliar ou adicionar à estante usuários e livros já cadastrados
+
+## Descrição das funcionalidades
+
+### Livros
+
+Base do sistema. Cada livro tem título, autor, ano de publicação e data de cadastro, gerada
+automaticamente. É possível cadastrar, listar todos, buscar pelo id, alterar e remover. O título é
+obrigatório. Ao remover um livro, as avaliações e os itens de estante ligados a ele também são removidos.
+
+### Usuários
+
+Representam os leitores. Cada usuário tem nome e data de cadastro. O CRUD é completo, e o nome é
+obrigatório. Para não perder o histórico de opiniões, **um usuário que já fez avaliações não pode ser
+removido**: a API responde `409 Conflict`. Também é possível consultar todas as avaliações feitas por um
+usuário.
+
+### Avaliações
+
+Ligam um usuário a um livro, com nota de 1 a 5 e um comentário opcional. Antes de salvar, a API
+confere se o livro e o usuário existem e se a nota está no intervalo permitido. Um índice único no
+banco (`UsuarioId + LivroId`) garante **uma avaliação por usuário para cada livro**. Uma segunda
+tentativa retorna `409 Conflict`. A nota e o comentário podem ser alterados depois, e a avaliação pode
+ser removida.
+
+### Média e avaliações por livro
+
+A partir das avaliações cadastradas, a API calcula a **média das notas** de um livro, arredondada para
+duas casas, e informa o total de avaliações recebidas. Também lista todas as avaliações de um livro
+específico.
+
+### Estante de leitura
+
+Funciona como a lista de leitura do usuário. Cada item liga um usuário a um livro e guarda o status
+da leitura: `QueroLer`, `Lendo` ou `Lido`. Assim como nas avaliações, o mesmo livro não pode aparecer
+duas vezes na estante de um usuário. O status pode ser atualizado a qualquer momento. Quando passa a ser
+**Lido**, a **data de conclusão é preenchida automaticamente**. Se o status voltar atrás, a data é
+apagada.
+
+### Consultas da estante
+
+Além de listar a estante completa de um usuário, com título e autor de cada livro, é possível filtrar
+por um status, informando o nome (`Lido`) ou o número (`2`). Também existe um **resumo** com a
+quantidade de livros em cada status e o total, útil para acompanhar o progresso de leitura.
 
 ## Tecnologias
 
@@ -111,6 +188,44 @@ Exemplo de resposta do resumo:
 
 ## Testando
 
-Abra os arquivos da pasta `API/Tests` (`Livros.http`, `Estante.http`) com a API rodando e clique
-em **Send Request** em cada bloco. Comece cadastrando um usuário e um livro, porque as avaliações
-e a estante dependem deles.
+Abra os arquivos da pasta `API/Tests` com a API rodando e clique em **Send Request** em cada bloco:
+
+| Arquivo | O que testa |
+|---|---|
+| `Livros.http` | CRUD de livros |
+| `Usuarios.http` | CRUD de usuários e avaliações de um usuário |
+| `Avaliacoes.http` | CRUD de avaliações, média, avaliações por livro e erros (nota inválida, duplicada, livro inexistente) |
+| `Estante.http` | Estante, filtro por status, resumo e erros (item duplicado, status inválido) |
+| `Video.http` | Roteiro completo de demonstração, do cadastro até a estante (rodar com o banco limpo) |
+
+Comece cadastrando um usuário e um livro, porque as avaliações e a estante dependem deles.
+
+## Capturas de tela
+
+Testes executados no VS Code com a extensão REST Client. A requisição fica à esquerda e a resposta
+da API à direita.
+
+**Listar usuários** (`GET /usuarios`): a API devolve os dois usuários cadastrados, com id, nome e data de cadastro.
+
+![Listagem de usuários](docs/img/listar-usuarios.png)
+
+**Resumo da estante** (`GET /usuarios/2/estante/resumo`): o usuário de id 2 ainda não tem livros na
+estante, então todos os contadores aparecem zerados.
+
+![Resumo da estante do usuário 2](docs/img/resumo-estante.png)
+
+## Uso de IA
+
+Conforme pedido no enunciado, a documentação deste README foi produzida com auxílio de Inteligência Artificial.
+
+- **Ferramenta utilizada:** Claude (Anthropic), pelo Claude Code integrado ao VS Code.
+- **Forma de uso:**
+  - Foi pedido que completasse o README com as seções exigidas (identificação, resumo,
+    funcionalidades, descrição das funcionalidades e uso de IA), com base no que o código realmente faz.
+  - A IA também foi usada para validar os arquivos de teste.
+  - Exemplo de prompt usado: _"Verifique se tudo o que foi solicitado pelo professor está sendo
+    apresentado no projeto"_ e, depois, _"Complete o README com as informações solicitadas que estão faltando"_.
+- **Revisões realizadas pela equipe:**
+  - _Informações preenchidas no README foram todas revisadas pelos membros da equipe
+    e algumas foram reescritas para se adequar melhor a situação do projeto e do desenvolvimento._
+  - _Arquivos de teste foram ajsutados e validados pela equipe após a validação feita pelo agente de IA._

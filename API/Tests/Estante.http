@@ -11,6 +11,16 @@ Content-Type: application/json
     "nome": "Maria"
 }
 
+### Cadastrar um livro (para testar)
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "anoPublicacao": 1899
+}
+
 ### Adicionar livro na estante (status: 0 = QueroLer, 1 = Lendo, 2 = Lido)
 POST {{host}}/estante
 Content-Type: application/json
@@ -44,7 +54,7 @@ GET {{host}}/usuarios/1/estante/0
 GET {{host}}/usuarios/999/estante
 
 ### Resumo da estante (quantos livros em cada status)
-GET {{host}}/usuarios/1/estante/resumo
+GET {{host}}/usuarios/2/estante/resumo
 
 ### Marcar como Lido
 PUT {{host}}/estante/1

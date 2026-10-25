@@ -1,0 +1,179 @@
+@host = http://localhost:5195
+
+# Sequência usada na gravação do vídeo.
+# Rode com o banco LIMPO (apague o AvaliadorLivros.db e rode "dotnet ef database update"),
+# de cima para baixo, para os ids baterem.
+
+### 1. Cadastrar usuária Ana (id 1)
+POST {{host}}/usuarios
+Content-Type: application/json
+
+{
+    "nome": "Ana"
+}
+
+### 2. Cadastrar usuário Bruno (id 2)
+POST {{host}}/usuarios
+Content-Type: application/json
+
+{
+    "nome": "Bruno"
+}
+
+### 3. Cadastrar livro Dom Casmurro (id 1)
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "anoPublicacao": 1899
+}
+
+### 4. Cadastrar livro 1984 (id 2)
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "anoPublicacao": 1948
+}
+
+### 5. Cadastrar livro O Hobbit (id 3)
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "O Hobbit",
+    "autor": "J. R. R. Tolkien",
+    "anoPublicacao": 1937
+}
+
+### 6. Listar livros
+GET {{host}}/api/livro/listar
+
+### 7. Alterar livro: corrigir o ano de 1984 para 1949
+PUT {{host}}/api/livro/alterar/2
+Content-Type: application/json
+
+{
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "anoPublicacao": 1949
+}
+
+### 8. Ana avalia Dom Casmurro com nota 5
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 1,
+    "nota": 5,
+    "comentario": "Clássico obrigatório."
+}
+
+### 9. Bruno avalia Dom Casmurro com nota 4
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 2,
+    "nota": 4,
+    "comentario": "Muito bom, mas um pouco lento."
+}
+
+### 10. Ana tenta avaliar o mesmo livro de novo -> 409 Conflict
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 1,
+    "usuarioId": 1,
+    "nota": 3,
+    "comentario": "Avaliação repetida"
+}
+
+### 11. Avaliação de livro que não existe -> 400
+POST {{host}}/avaliacoes
+Content-Type: application/json
+
+{
+    "livroId": 999,
+    "usuarioId": 1,
+    "nota": 3,
+    "comentario": "Livro inexistente"
+}
+
+### 12. Média de Dom Casmurro -> 4.5
+GET {{host}}/livros/1/media
+
+### 13. Estante da Ana: Dom Casmurro como Lido
+POST {{host}}/estante
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 1,
+    "status": 2
+}
+
+### 14. Estante da Ana: 1984 como Lendo
+POST {{host}}/estante
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 2,
+    "status": 1
+}
+
+### 15. Estante da Ana: O Hobbit como Quero ler
+POST {{host}}/estante
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 3,
+    "status": 0
+}
+
+### 16. Ver a estante da Ana
+GET {{host}}/usuarios/1/estante
+
+### 17. Ana terminou 1984: muda o status para Lido (preenche a data de conclusão)
+PUT {{host}}/estante/2
+Content-Type: application/json
+
+{
+    "usuarioId": 1,
+    "livroId": 2,
+    "status": 2
+}
+
+### 18. Só os livros lidos da Ana
+GET {{host}}/usuarios/1/estante/Lido
+
+### 19. Resumo da estante da Ana
+GET {{host}}/usuarios/1/estante/resumo
+
+### 20. Remover O Hobbit da estante
+DELETE {{host}}/estante/3
+
+### 21. Tentar remover Bruno, que já avaliou um livro -> 409 Conflict
+DELETE {{host}}/usuarios/2
+
+### 22. Cadastrar e remover um livro (DELETE do CRUD)
+POST {{host}}/api/livro/cadastrar
+Content-Type: application/json
+
+{
+    "titulo": "Livro de teste",
+    "autor": "Ninguém",
+    "anoPublicacao": 2026
+}
+
+### 23. Remover o livro de teste (id 4)
+DELETE {{host}}/api/livro/remover/4

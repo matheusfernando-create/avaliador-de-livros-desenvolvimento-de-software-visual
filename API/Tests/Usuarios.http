@@ -1,0 +1,41 @@
+@host = http://localhost:5195
+
+### CREATE - Cadastrar usuário
+POST {{host}}/usuarios
+Content-Type: application/json
+
+{
+    "nome": "Helder"
+}
+
+### Cadastrar usuário sem nome -> deve dar 400
+POST {{host}}/usuarios
+Content-Type: application/json
+
+{
+    "nome": ""
+}
+
+### READ - Listar usuários
+GET {{host}}/usuarios
+
+### READ - Buscar usuário por id
+GET {{host}}/usuarios/2
+
+### Usuário inexistente -> deve dar 404
+GET {{host}}/usuarios/999
+
+### UPDATE - Alterar nome do usuário
+PUT {{host}}/usuarios/3
+Content-Type: application/json
+
+{
+    "nome": "Ciclano"
+}
+
+### Avaliações feitas pelo usuário 1
+GET {{host}}/usuarios/2/avaliacoes
+
+### DELETE - Remover usuário
+# Se o usuário já tiver avaliações, deve dar 409 Conflict
+DELETE {{host}}/usuarios/1
