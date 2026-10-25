@@ -196,7 +196,7 @@ Abra os arquivos da pasta `API/Tests` com a API rodando e clique em **Send Reque
 | `Usuarios.http` | CRUD de usuários e avaliações de um usuário |
 | `Avaliacoes.http` | CRUD de avaliações, média, avaliações por livro e erros (nota inválida, duplicada, livro inexistente) |
 | `Estante.http` | Estante, filtro por status, resumo e erros (item duplicado, status inválido) |
-| `Video.http` | Roteiro completo de demonstração, do cadastro até a estante (rodar com o banco limpo) |
+| `Demo.http` | Roteiro completo de demonstração, do cadastro até a estante (rodar com o banco limpo) |
 
 Comece cadastrando um usuário e um livro, porque as avaliações e a estante dependem deles.
 
