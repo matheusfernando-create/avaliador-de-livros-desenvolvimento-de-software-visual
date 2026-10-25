@@ -200,20 +200,6 @@ Abra os arquivos da pasta `API/Tests` com a API rodando e clique em **Send Reque
 
 Comece cadastrando um usuário e um livro, porque as avaliações e a estante dependem deles.
 
-## Capturas de tela
-
-Testes executados no VS Code com a extensão REST Client. A requisição fica à esquerda e a resposta
-da API à direita.
-
-**Listar usuários** (`GET /usuarios`): a API devolve os dois usuários cadastrados, com id, nome e data de cadastro.
-
-![Listagem de usuários](docs/img/listar-usuarios.png)
-
-**Resumo da estante** (`GET /usuarios/2/estante/resumo`): o usuário de id 2 ainda não tem livros na
-estante, então todos os contadores aparecem zerados.
-
-![Resumo da estante do usuário 2](docs/img/resumo-estante.png)
-
 ## Uso de IA
 
 Conforme pedido no enunciado, a documentação deste README foi produzida com auxílio de Inteligência Artificial.
