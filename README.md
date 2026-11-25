@@ -106,9 +106,42 @@ dotnet run                  # sobe a API em http://localhost:5195
 > Se a máquina tiver só o .NET 10 instalado, rode antes `export DOTNET_ROLL_FORWARD=Major`
 > (PowerShell: `$env:DOTNET_ROLL_FORWARD = "Major"`) ou instale o runtime do .NET 8.
 
+### Front-end (React)
+
+Pré-requisito: [Node.js](https://nodejs.org/) 18 ou mais novo. Com a API rodando, em outro terminal,
+dentro da pasta `Front`:
+
+```bash
+npm install   # só na primeira vez
+npm run dev   # abre o site em http://localhost:5173
+```
+
+O front chama `/backend/...` e o Vite repassa para a API em `http://localhost:5195`
+(configurado em `Front/vite.config.js`), por isso a API não precisa de CORS.
+
+### Divisão do front-end
+
+Cada integrante faz a página da parte que criou na API. As páginas já existem em `Front/src/pages`
+com o título e, no topo do arquivo, a lista do que falta e quais funções de `src/api.js` usar.
+
+| Página | Arquivo | Responsável | Situação |
+|---|---|---|---|
+| Avaliações | `Avaliacoes.jsx` | Rodrigo | Pronta |
+| Livros | `Livros.jsx` | Matheus | A fazer |
+| Leitores | `Usuarios.jsx` | Yasmin | A fazer |
+| Estante | `Estante.jsx` | Helder | A fazer |
+| Início | `Inicio.jsx` | A definir | A fazer |
+
 ## Estrutura
 
 ```
+Front/
+├── src/api.js                # todas as chamadas à API
+├── src/App.jsx               # cabeçalho e navegação por abas
+├── src/pages/                # Início, Livros, Leitores, Avaliações e Estante
+├── src/components/           # Estrelas (nota) e Aviso (mensagens)
+└── src/index.css             # estilo da aplicação (gerado com IA)
+
 API/
 ├── Data/AppDbContext.cs      # conexão com o SQLite e índices únicos
 ├── Models/                   # entidades: Livro, Usuario, Avaliacao, Estante
@@ -215,3 +248,9 @@ Conforme pedido no enunciado, a documentação deste README foi produzida com au
   - _Informações preenchidas no README foram todas revisadas pelos membros da equipe
     e algumas foram reescritas para se adequar melhor a situação do projeto e do desenvolvimento._
   - _Arquivos de teste foram ajsutados e validados pela equipe após a validação feita pelo agente de IA._
+
+### Parte 2: front-end e CSS
+
+- O **CSS** do front-end (`Front/src/index.css`, tema "biblioteca" em tons de papel e vinho) foi
+  gerado com IA, como pede o enunciado.
+- A IA também ajudou a montar as telas em React a partir das rotas da API.
