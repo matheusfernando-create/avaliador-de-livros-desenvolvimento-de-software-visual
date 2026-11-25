@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Estrelas from "../components/Estrelas.jsx";
 
-// Página de Livros (cadastrar, listar, editar, remover e mostrar a média em estrelas).
+// Página de Livros (cadastrar, listar, editar, remover, média em estrelas e ver as avaliações).
 // Segue o exemplo do professor (CadastrarProduto + ListarProdutos): useState, useEffect
-// e fetch com .then. A diferença é que aqui tem editar, remover e a média das notas.
+// e fetch com .then. A diferença é que aqui tem editar, remover, a média das notas
+// e a lista de avaliações de cada livro.
 
 // O front chama "/backend/...": o Vite repassa para a API em http://localhost:5195
 // (ver vite.config.js). Por isso não dá erro de CORS.
@@ -28,11 +29,15 @@ export default function Livros({ avisar }) {
   const [autor, setAutor] = useState("");
   const [ano, setAno] = useState("");
   const [editandoId, setEditandoId] = useState(null); // null = cadastrando
+  const [leitores, setLeitores] = useState([]); // para mostrar o nome de quem avaliou
+  const [livroAbertoId, setLivroAbertoId] = useState(null); // livro com as avaliações abertas
+  const [avaliacoes, setAvaliacoes] = useState({}); // avaliações de cada livro, pelo livroId
 
   //useEffect é utilizado para executar qualquer código
   //no momento em que o componente estiver sendo aberto
   useEffect(() => {
     listarLivros();
+    listarLeitores();
   }, []);
 
   //GET: /api/livro/listar
@@ -58,6 +63,16 @@ export default function Livros({ avisar }) {
           // Se falhar, o livro só fica sem a média na tela.
         });
     });
+  }
+
+  //GET: /usuarios (só para mostrar o nome de quem fez cada avaliação)
+  function listarLeitores() {
+    fetch(URL_API + "/usuarios")
+      .then(lerResposta)
+      .then((dados) => setLeitores(dados))
+      .catch(() => {
+        // Se falhar, as avaliações aparecem como "Leitor #id".
+      });
   }
 
   //POST: /api/livro/cadastrar  ou  PUT: /api/livro/alterar/{id}
@@ -133,9 +148,43 @@ export default function Livros({ avisar }) {
         if (editandoId === livro.livroId) {
           limparFormulario();
         }
+        if (livroAbertoId === livro.livroId) {
+          setLivroAbertoId(null);
+        }
         listarLivros();
       })
       .catch((erro) => avisar(erro.message, "erro"));
+  }
+
+  //GET: /livros/{id}/avaliacoes
+  // Abre (ou fecha) as avaliações do livro, logo abaixo dele na tabela
+  function alternarAvaliacoes(livro) {
+    if (livroAbertoId === livro.livroId) {
+      setLivroAbertoId(null);
+      return;
+    }
+
+    setLivroAbertoId(livro.livroId);
+
+    fetch(URL_API + "/livros/" + livro.livroId + "/avaliacoes")
+      .then(lerResposta)
+      .then((dados) => {
+        // Mais recentes primeiro
+        const ordenadas = [...dados].sort(
+          (a, b) => new Date(b.dataAvaliacao) - new Date(a.dataAvaliacao)
+        );
+        setAvaliacoes((atual) => ({ ...atual, [livro.livroId]: ordenadas }));
+      })
+      .catch((erro) => {
+        avisar(erro.message, "erro");
+        setAvaliacoes((atual) => ({ ...atual, [livro.livroId]: [] }));
+      });
+  }
+
+  // Procura o nome do leitor pelo id
+  function nomeLeitor(usuarioId) {
+    const leitor = leitores.find((l) => l.usuarioId === usuarioId);
+    return leitor ? leitor.nome : "Leitor #" + usuarioId;
   }
 
   // Mostra a média do livro em estrelas (ou "Sem avaliações")
@@ -154,6 +203,31 @@ export default function Livros({ avisar }) {
           {media.media.toFixed(1).replace(".", ",")} ({media.totalAvaliacoes})
         </small>
       </>
+    );
+  }
+
+  // Mostra as avaliações de um livro (nome, estrelas, data e comentário)
+  function mostrarAvaliacoes(livroId) {
+    const lista = avaliacoes[livroId];
+    if (!lista) {
+      return <p className="vazio">Carregando…</p>;
+    }
+    if (lista.length === 0) {
+      return <p className="vazio">Este livro ainda não tem avaliações.</p>;
+    }
+    return (
+      <ul className="lista-avaliacoes">
+        {lista.map((avaliacao) => (
+          <li key={avaliacao.avaliacaoId}>
+            <b>{nomeLeitor(avaliacao.usuarioId)}</b>{" "}
+            <Estrelas nota={avaliacao.nota} tamanho="pequeno" />{" "}
+            <small>
+              {new Date(avaliacao.dataAvaliacao).toLocaleDateString("pt-BR")}
+            </small>
+            {avaliacao.comentario && <p>“{avaliacao.comentario}”</p>}
+          </li>
+        ))}
+      </ul>
     );
   }
 
@@ -219,29 +293,44 @@ export default function Livros({ avisar }) {
             </thead>
             <tbody>
               {livros.map((livro) => (
-                <tr key={livro.livroId}>
-                  <td>{livro.livroId}</td>
-                  <td>{livro.titulo}</td>
-                  <td>{livro.autor || "—"}</td>
-                  <td>{livro.anoPublicacao || "—"}</td>
-                  <td>{mostrarMedia(livro.livroId)}</td>
-                  <td>
-                    <div className="acoes">
-                      <button
-                        className="btn pequeno"
-                        onClick={() => editarLivro(livro)}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="btn pequeno perigo"
-                        onClick={() => removerLivro(livro)}
-                      >
-                        Remover
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                <Fragment key={livro.livroId}>
+                  <tr>
+                    <td>{livro.livroId}</td>
+                    <td>{livro.titulo}</td>
+                    <td>{livro.autor || "—"}</td>
+                    <td>{livro.anoPublicacao || "—"}</td>
+                    <td>{mostrarMedia(livro.livroId)}</td>
+                    <td>
+                      <div className="acoes">
+                        <button
+                          className="btn pequeno"
+                          onClick={() => alternarAvaliacoes(livro)}
+                        >
+                          {livroAbertoId === livro.livroId
+                            ? "Ocultar avaliações"
+                            : "Ver avaliações"}
+                        </button>
+                        <button
+                          className="btn pequeno"
+                          onClick={() => editarLivro(livro)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="btn pequeno perigo"
+                          onClick={() => removerLivro(livro)}
+                        >
+                          Remover
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  {livroAbertoId === livro.livroId && (
+                    <tr>
+                      <td colSpan="6">{mostrarAvaliacoes(livro.livroId)}</td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>
