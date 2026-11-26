@@ -129,8 +129,8 @@ com o título e, no topo do arquivo, a lista do que falta e quais funções de `
 | Avaliações | `Avaliacoes.jsx` | Rodrigo | Pronta |
 | Livros | `Livros.jsx` | Matheus | A fazer |
 | Leitores | `Usuarios.jsx` | Yasmin | A fazer |
-| Estante | `Estante.jsx` | Helder | A fazer |
-| Início | `Inicio.jsx` | A definir | A fazer |
+| Estante | `Estante.jsx` | Helder | Pronta |
+| Início | `Inicio.jsx` | Helder | Pronta |
 
 ## Estrutura
 

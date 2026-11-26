@@ -1,0 +1,121 @@
+# 2026.02 - 📘 Desenvolvimento de Software Visual - Projeto Final – Parte 2
+
+---
+
+## 👥 Formação das Equipes
+
+- Equipes de **2 a 4 alunos**
+- **Não será permitido trabalho individual**
+
+---
+
+## 🗓️ Entrega
+
+- **Data limite:** 25/11/2026 até 23h59
+- **Forma:** Vídeo com até 5 minutos
+- **Envio:** Via e-mail com o link do vídeo + link do repositório
+- **Assunto do e-mail:** `Projeto Final - Desenvolvimento de Software Visual - INDIQUE O DIA DA SUA AULA`
+- **Para:** diogo.deconto@up.edu.br
+
+---
+
+## 🎯 Objetivo
+
+O objetivo deste projeto é proporcionar aos alunos a experiência prática de desenvolver uma aplicação completa, utilizando tecnologias atuais de mercado e aplicando os conceitos estudados em sala de aula. A atividade busca estimular o trabalho em equipe, a organização de processos de desenvolvimento, o uso de ferramentas colaborativas e a integração entre front-end, back-end e banco de dados. Além disso, visa aproximar o estudante de situações reais da área de tecnologia, nas quais é necessário planejar, implementar e apresentar soluções funcionais dentro de prazos definidos.
+
+---
+
+## ✅ Requisitos Básicos do Sistema
+
+- Tema livre (**exceto vendas, e-commerce e correlatos**).
+- Uso de ferramenta de **compartilhamento/colaboração de código** (mostrar no vídeo).
+- Sistema deve conter **2 a 4 entidades/modelos (tabelas)** utilizando banco de dados.
+- Pelo menos uma entidade deve ter **CRUD completo** (inserção, remoção, alteração e listagem).
+- Pelo menos uma entidade deve ter **relacionamento** com outra já cadastrada no banco.
+    - *Exemplo*: cadastro de categorias antes de cadastrar produtos.
+- O sistema não pode se limitar a cadastros básicos: os dados inseridos devem ser usados em **funcionalidades que façam sentido**.
+    - *Exemplo*: usuário cadastra produtos → cria carrinho → gera venda.
+- **Tecnologias obrigatórias:**
+    - Backend: **C# com SDK 8 (Minimal API)**
+    - Frontend: React Vanilla
+    - Estilo: Estilizar a aplicação utilizando feramentas de IA para gerar o CSS.
+    - ORM: **Entity Framework**
+    - Banco: **SQLite**
+
+---
+
+## 🧮 Critérios de Avaliação
+
+### 🎤 Apresentação do projeto (0,2)
+
+Será avaliada:
+
+- Clareza na explicação da proposta
+- Demonstração do sistema em funcionamento
+- Organização da apresentação
+- Domínio do conteúdo pelos integrantes
+
+> Considerando o tempo reduzido do vídeo, não é obrigatório que todos os integrantes participem da apresentação.
+> 
+
+---
+
+### 💻 Uso de ferramenta de versionamento (0,3)
+
+Será considerado:
+
+- Uso do Git (ou ferramenta similar) durante o desenvolvimento
+- Participação de todos os integrantes
+- Frequência de commits
+- Organização básica do repositório
+
+> A avaliação levará em conta a colaboração efetiva de cada integrante ao longo do desenvolvimento, não sendo suficiente a realização de commits pontuais ou irrelevantes apenas para registro de participação.
+> 
+
+---
+
+### ⚙️ Construção da aplicação (backend/frontend) (0,5)
+
+Será avaliado:
+
+- Funcionamento geral da aplicação
+- Implementação dos requisitos propostos (CRUD, entidades e relacionamentos)
+- Uso do banco de dados com Entity Framework
+- Uso do React Vanilla para o desenvolvimento da aplicação visual
+- Coerência das funcionalidades desenvolvidas
+
+---
+
+---
+
+## 📤 Entrega Final
+
+- **Prazo:** 22/11/2026 às 23h59
+- **Envio para:** diogo.deconto@up.edu.br
+- **Assunto do e-mail:** Projeto Final - Desenvolvimento de Software Visual
+- **Corpo do e-mail:** Nome completo de todos os integrantes + link do vídeo + link dos repositórios
+
+---
+
+---
+
+## 🎥 Vídeo de apresentação (até 5 minutos)
+
+O vídeo deve apresentar de forma objetiva o projeto desenvolvido, contemplando:
+
+- Explicação da proposta do sistema (problema e solução desenvolvida)
+- Demonstração do sistema em funcionamento
+- Apresentação geral das funcionalidades implementadas
+- Exibição do repositório e evidências de uso da ferramenta de versionamento (commits)
+
+> Considerando o tempo reduzido do vídeo, não é obrigatório que todos os integrantes participem da apresentação.
+> 
+
+---
+
+## 📌 Observação
+
+- O vídeo deve ser direto e focado na demonstração prática do sistema, não sendo necessário o uso de slides ou apresentações formais.
+- O objetivo é evidenciar o funcionamento da aplicação e a participação da equipe no desenvolvimento.
+
+---
